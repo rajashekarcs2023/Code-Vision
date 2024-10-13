@@ -100,7 +100,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact
 
-For questions or inquiries, please reach out to us at `contact@codevision-ai.com`.
+For questions or inquiries, please reach out to us at `rajashekarvennavelli@gmail.com`.
 
 ---
 
