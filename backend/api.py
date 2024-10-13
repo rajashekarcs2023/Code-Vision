@@ -5,6 +5,7 @@ from typing import List
 from fastapi.middleware.cors import CORSMiddleware
 from openai import OpenAI
 import ast
+import re
 
 app = FastAPI()
 
@@ -172,8 +173,13 @@ def optimize_performance(file_path):
     except Exception as e:
         return f"Failed to analyze performance for {file_path}. Error: {str(e)}"
 
+
+
 def audit_security(file_path):
-    """Basic security audit on the file."""
+    """
+    Perform a comprehensive security audit on the file, checking for compliance
+    with HIPAA, SOC 2, PCI DSS, and GDPR.
+    """
     try:
         with open(file_path, 'r') as file:
             content = file.read()
@@ -181,14 +187,17 @@ def audit_security(file_path):
         tree = ast.parse(content)
         vulnerabilities = []
 
-        for node in ast.walk(tree):
-            if isinstance(node, ast.Call):
-                if isinstance(node.func, ast.Name):
-                    if node.func.id in ['eval', 'exec']:
-                        vulnerabilities.append(f"Potentially unsafe use of {node.func.id}() detected")
-                elif isinstance(node.func, ast.Attribute):
-                    if node.func.attr == 'subprocess':
-                        vulnerabilities.append("Use of subprocess detected. Ensure proper input sanitization")
+        # General security checks
+        vulnerabilities.extend(check_general_security(tree))
+
+        # HIPAA compliance checks
+        vulnerabilities.extend(check_hipaa_compliance(tree, content))
+
+        # SOC 2 and PCI DSS compliance checks
+        vulnerabilities.extend(check_soc2_pci_compliance(tree, content))
+
+        # GDPR compliance checks
+        vulnerabilities.extend(check_gdpr_compliance(tree, content))
 
         if vulnerabilities:
             return f"Security vulnerabilities found in {file_path}:\n" + "\n".join(vulnerabilities)
@@ -196,6 +205,80 @@ def audit_security(file_path):
             return f"No obvious security vulnerabilities detected in {file_path}."
     except Exception as e:
         return f"Failed to perform security audit on {file_path}. Error: {str(e)}"
+
+def check_general_security(tree):
+    vulnerabilities = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call):
+            if isinstance(node.func, ast.Name):
+                if node.func.id in ['eval', 'exec']:
+                    vulnerabilities.append(f"Potentially unsafe use of {node.func.id}() detected")
+            elif isinstance(node.func, ast.Attribute):
+                if node.func.attr == 'subprocess':
+                    vulnerabilities.append("Use of subprocess detected. Ensure proper input sanitization")
+    return vulnerabilities
+
+def check_hipaa_compliance(tree, content):
+    vulnerabilities = []
+    
+    # Check for unencrypted data transmission
+    if 'http://' in content and 'https://' not in content:
+        vulnerabilities.append("HIPAA: Unencrypted data transmission detected. Use HTTPS instead of HTTP")
+
+    # Check for hardcoded patient information
+    patient_info_pattern = r'\b(patient|medical|health)\s*=\s*[\'"][^\'"]+[\'"]\s*'
+    if re.search(patient_info_pattern, content, re.IGNORECASE):
+        vulnerabilities.append("HIPAA: Potential hardcoded patient information detected")
+
+    # Check for logging of sensitive information
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            if node.func.attr in ['debug', 'info', 'warning', 'error', 'critical']:
+                vulnerabilities.append("HIPAA: Logging detected. Ensure no sensitive patient data is being logged")
+
+    return vulnerabilities
+
+def check_soc2_pci_compliance(tree, content):
+    vulnerabilities = []
+    
+    # Check for hardcoded credentials
+    credential_pattern = r'\b(password|api_key|secret)\s*=\s*[\'"][^\'"]+[\'"]\s*'
+    if re.search(credential_pattern, content, re.IGNORECASE):
+        vulnerabilities.append("SOC 2/PCI DSS: Hardcoded credentials detected")
+
+    # Check for insecure cryptographic algorithms
+    weak_crypto = ['md5', 'sha1']
+    for algo in weak_crypto:
+        if algo in content.lower():
+            vulnerabilities.append(f"SOC 2/PCI DSS: Weak cryptographic algorithm ({algo}) detected")
+
+    # Check for proper error handling
+    try_count = sum(1 for node in ast.walk(tree) if isinstance(node, ast.Try))
+    except_count = sum(1 for node in ast.walk(tree) if isinstance(node, ast.ExceptHandler))
+    if try_count > except_count:
+        vulnerabilities.append("SOC 2/PCI DSS: Potential improper error handling detected")
+
+    return vulnerabilities
+
+def check_gdpr_compliance(tree, content):
+    vulnerabilities = []
+    
+    # Check for personal data processing without consent
+    personal_data_pattern = r'\b(name|email|address|phone|birthdate)\s*=\s*'
+    if re.search(personal_data_pattern, content, re.IGNORECASE):
+        vulnerabilities.append("GDPR: Personal data processing detected. Ensure user consent is obtained")
+
+    # Check for data retention policies
+    if 'delete' not in content.lower() and 'remove' not in content.lower():
+        vulnerabilities.append("GDPR: No apparent data deletion mechanism. Implement data retention policies")
+
+    # Check for cross-border data transfers
+    transfer_keywords = ['transfer', 'send', 'transmit']
+    for keyword in transfer_keywords:
+        if keyword in content.lower():
+            vulnerabilities.append("GDPR: Potential cross-border data transfer detected. Ensure compliance with GDPR transfer rules")
+
+    return vulnerabilities
 
 def refactor_code(file_path):
     """Basic code refactoring suggestions."""
@@ -253,6 +336,49 @@ def generate_openai_queries(analysis_result: str, analysis_type: str):
         3. Explore both immediate fixes and long-term security enhancements.
         Consider aspects such as input validation, authentication, data encryption, and secure coding practices."""
 
+    elif analysis_type == "security":
+        prompt = f"""Given the following security audit result: '{analysis_result}', generate a comprehensive security analysis report. The report should include:
+
+            1. Executive Summary:
+            - Provide a high-level overview of the security audit findings.
+            - Highlight the most critical vulnerabilities or compliance issues.
+
+            2. Detailed Analysis (address each of the following):
+            a. HIPAA Compliance:
+                - Identify any potential violations of patient data privacy.
+                - Assess the security of health information transmission and storage.
+            b. SOC 2 and PCI DSS Compliance:
+                - Evaluate the handling of sensitive financial data and credentials.
+                - Analyze the robustness of cryptographic implementations.
+            c. GDPR Compliance:
+                - Examine personal data processing practices and consent mechanisms.
+                - Assess data retention policies and cross-border transfer compliance.
+            d. General Security Best Practices:
+                - Review input validation, authentication methods, and access controls.
+                - Analyze the use of potentially unsafe functions or libraries.
+
+            3. Risk Assessment:
+            - For each identified vulnerability:
+                * Describe potential exploit scenarios.
+                * Assess the severity and potential impact on the organization.
+                * Estimate the likelihood of exploitation.
+
+            4. Remediation Plan:
+            - Propose immediate fixes for critical vulnerabilities.
+            - Suggest long-term security enhancements and best practices.
+            - Recommend tools or processes for ongoing security monitoring.
+
+            5. Compliance Roadmap:
+            - Outline steps to achieve full compliance with relevant standards (HIPAA, SOC 2, PCI DSS, GDPR).
+            - Suggest employee training programs to improve security awareness.
+
+            6. Future Considerations:
+            - Discuss emerging security threats relevant to the industry.
+            - Recommend proactive measures to stay ahead of evolving security challenges.
+
+            Ensure the report is detailed, actionable, and prioritizes issues based on their criticality. Use clear, concise language suitable for both technical and non-technical stakeholders.
+            """
+
     elif analysis_type == "refactoring":
         prompt = f"""Based on this code refactoring analysis: '{analysis_result}', devise 3 strategic questions for the development team. Each question should:
         1. Target a specific area of the code that needs restructuring.
@@ -263,12 +389,12 @@ def generate_openai_queries(analysis_result: str, analysis_type: str):
     try:
         # Call OpenAI's ChatCompletion endpoint
         response = client.chat.completions.create(
-            model="gpt-4",  # Use "gpt-4" for best results
+            model="gpt-4o",  # Use "gpt-4" for best results
             messages=[
                 {"role": "system", "content": "You are an expert software engineer specializing in code analysis and best practices. Provide insightful and actionable advice."},
                 {"role": "user", "content": prompt},
             ],
-            max_tokens=300,
+            max_tokens=2000,
             temperature=0.7,  # Adjust for creativity vs consistency
         )
 
