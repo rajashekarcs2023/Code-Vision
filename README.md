@@ -95,12 +95,36 @@
 5. Submit a pull request.
 
 ## License
+AnalystAI is open source software released under the MIT License.
+The MIT License (MIT)
+Copyright (c) [2024 [Rajashekar Vennavelli]
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+What this means for you
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+You can freely use, modify, and distribute this software.
+You can use it in private or commercial projects.
+You don't have to share your modifications if you don't want to.
+You must include the original copyright notice and license in any copy of the software/source.
+The software comes with no warranty - use at your own risk!
 
-## Contact
+For more details on the MIT License, please visit choosealicense.com/licenses/mit/.
 
-For questions or inquiries, please reach out to us at `rajashekarvennavelli@gmail.com`.
+We welcome contributions! Please see our CONTRIBUTING.md file for details on how to get involved.
+For any questions regarding licensing or contributions, please open an issue or contact the project maintainers.
 
 ---
 
