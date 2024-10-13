@@ -8,3 +8,7 @@
 __pycache__/
 assets/external/
 venv/
+# .gitignore
+.env
+*.log
+__pycache__/
