@@ -1,73 +1,131 @@
-# Welcome to Reflex!
+# CodeVision AI - README
 
-This is the base Reflex template - installed when you run `reflex init`.
+## Overview
 
-If you want to use a different template, pass the `--template` flag to `reflex init`.
-For example, if you want a more basic starting point, you can run:
+**CodeVision AI** is an advanced code analysis and compliance tool designed to assist developers in improving code quality, detecting bugs, optimizing performance, and ensuring compliance with both internal and external standards. By integrating advanced AI-powered tools such as OpenAI's GPT-4 and LlamaIndex, CodeVision AI not only identifies issues but also provides actionable suggestions for improvement. With its flexible architecture, it seamlessly integrates into the CI/CD pipeline, helping developers enforce best practices continuously.
 
-```bash
-reflex init --template blank
-```
+## Features
 
-## About this Template
+- **Code Quality Analysis**: Evaluates code readability, maintainability, and adherence to standards like PEP 8.
+- **Bug Detection**: Detects potential bugs early in the development process using static analysis tools.
+- **Performance Optimization**: Analyzes performance bottlenecks in the code and suggests optimizations.
+- **Security Audits**: Performs checks for vulnerabilities, ensuring that the code follows secure coding practices.
+- **Internal & External Compliance Checks**: Automatically verifies code compliance with internal company policies and external regulations (e.g., GDPR, SOC 2, HIPAA).
+- **AI-Generated Reporting**: Uses GPT-4 and LlamaIndex to generate detailed reports in markdown format, with actionable insights and recommendations for developers.
+- **Retrieval-Augmented Generation (RAG)**: Provides context-aware feedback by retrieving relevant compliance and code standards from a large corpus stored in Pinecone and LlamaIndex.
 
-This template has the following directory structure:
+## Tech Stack
 
-```bash
-├── README.md
-├── assets
-├── rxconfig.py
-└── {your_app}
-    ├── __init__.py
-    ├── components
-    │   ├── __init__.py
-    │   ├── navbar.py
-    │   └── sidebar.py
-    ├── pages
-    │   ├── __init__.py
-    │   ├── about.py
-    │   ├── index.py
-    │   ├── profile.py
-    │   ├── settings.py
-    │   └── table.py
-    ├── styles.py
-    ├── templates
-    │   ├── __init__.py
-    │   └── template.py
-    └── {your_app}.py
-```
+- **Backend**: FastAPI for backend development and API management.
+- **Frontend**: Reflex framework for user interaction and file uploads.
+- **AI Models**: GPT-4 via OpenAI API for generating actionable insights from the analysis results.
+- **Static Analysis**: Pylint and other static analysis tools for performing code quality assessments.
+- **Document Retrieval**: LlamaIndex and Pinecone for managing and retrieving large corpuses of compliance and coding standards.
 
-See the [Project Structure docs](https://reflex.dev/docs/getting-started/project-structure/) for more information on general Reflex project structure.
+## Installation
 
-### Adding Pages
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-repo/codevision-ai.git
+   cd codevision-ai
+   ```
 
-In this template, the pages in your app are defined in `{your_app}/pages/`.
-Each page is a function that returns a Reflex component.
-For example, to edit this page you can modify `{your_app}/pages/index.py`.
-See the [pages docs](https://reflex.dev/docs/pages/routes/) for more information on pages.
+2. Create a virtual environment:
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
 
-In this template, instead of using `rx.add_page` or the `@rx.page` decorator,
-we use the `@template` decorator from `{your_app}/templates/template.py`.
+3. Install the dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-To add a new page:
+4. Set up environment variables for OpenAI API Key:
+   ```bash
+   export OPENAI_API_KEY="your-openai-api-key"
+   ```
 
-1. Add a new file in `{your_app}/pages/`. We recommend using one file per page, but you can also group pages in a single file.
-2. Add a new function with the `@template` decorator, which takes the same arguments as `@rx.page`.
-3. Import the page in your `{your_app}/pages/__init__.py` file and it will automatically be added to the app.
-4. Order the pages in `{your_app}/components/sidebar.py` and `{your_app}/components/navbar.py`.
+5. Run the FastAPI backend:
+   ```bash
+   uvicorn api:app --reload
+   ```
 
+6. (Optional) To run the Reflex frontend:
+   ```bash
+   reflex run
+   ```
 
-### Adding Components
+## Usage
 
-In order to keep your code organized, we recommend putting components that are
-used across multiple pages in the `{your_app}/components/` directory.
+1. Upload your code files through the Reflex-based frontend interface or directly place them in the `uploaded_files` directory.
+2. Select the type of analysis (Code Quality, Bug Detection, etc.) from the interface.
+3. View the detailed analysis report generated by the AI, including actionable suggestions, compliance checks, and refactoring recommendations.
+4. Download the markdown report summarizing the analysis.
 
-In this template, we have a sidebar component in `{your_app}/components/sidebar.py`.
+## Challenges
 
-### Adding State
+- **Understanding Reflex Framework**: Integrating Reflex for frontend and interaction required a deep understanding of its architecture.
+- **AI Model Integration**: Managing OpenAI’s responses and integrating them into a coherent system with LlamaIndex presented technical challenges.
+- **Complex Compliance Checks**: Ensuring comprehensive coverage of external compliance standards while balancing performance.
+  
+## Future Enhancements
 
-As your app grows, we recommend using [substates](https://reflex.dev/docs/substates/overview/)
-to organize your state.
+- **Deeper Compliance Checks**: Ingest a broader range of regulatory documents to provide a thorough review of every compliance requirement.
+- **Advanced Refactoring Suggestions**: Improve the system to not only highlight issues but also provide automated code refactoring recommendations.
+- **CI/CD Integration**: Integrate CodeVision AI into popular CI/CD pipelines to automatically trigger checks on every commit.
+- **Expanded Language Support**: Extend the tool to support languages like Java, C++, and JavaScript.
+- **Detailed Visualization**: Add a dashboard for visual tracking of code quality trends, compliance status, and performance metrics.
 
-You can either define substates in their own files, or if the state is
-specific to a page, you can define it in the page file itself.
+## Contributing
+
+1. Fork the repository.
+2. Create your feature branch:
+   ```bash
+   git checkout -b feature/new-feature
+   ```
+3. Commit your changes:
+   ```bash
+   git commit -m "Add new feature"
+   ```
+4. Push to the branch:
+   ```bash
+   git push origin feature/new-feature
+   ```
+5. Submit a pull request.
+
+## License
+CodeVisionAI is open source software released under the MIT License.
+The MIT License (MIT)
+Copyright (c) [2024] [Rajashekar Vennavelli]
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+What this means for you
+
+You can freely use, modify, and distribute this software.
+You can use it in private or commercial projects.
+You don't have to share your modifications if you don't want to.
+You must include the original copyright notice and license in any copy of the software/source.
+The software comes with no warranty - use at your own risk!
+
+For more details on the MIT License, please visit choosealicense.com/licenses/mit/.
+
+We welcome contributions! Please see our CONTRIBUTING.md file for details on how to get involved.
+For any questions regarding licensing or contributions, please open an issue or contact the project maintainers.
+
+---
+
+*Thank you for using CodeVision AI. Together, we can ensure better code quality, security, and compliance in every project.*
