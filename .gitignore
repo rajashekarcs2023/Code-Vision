@@ -1,52 +1,9 @@
-# Python-related
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-*.pdb
-*.egg-info/
-*.eggs/
-*.log
-*.sqlite3
-
-# Virtual environment
-venv/
-env/
-.venv/
-
-# Jupyter Notebook checkpoints
-.ipynb_checkpoints/
-
-# IDE files (VS Code, PyCharm, etc.)
-.vscode/
-.idea/
-*.sublime-workspace
-*.sublime-project
-
-# Environment Variables (Your `.env` file)
-.env
-
-# Cache files
-*.cache
-*.bak
-*.swp
-
-# Data and Logs
-*.csv
 *.db
-*.log
-*.dat
-
-# OS-generated files
-.DS_Store
-Thumbs.db
-
-# Reflex & Generated Files (if applicable)
-node_modules/
-build/
-static/css/
-static/js/
-dist/
-
-# Pinecone-related files if storing logs or data locally
-pinecone_logs/
+*.py[cod]
+.cursorignore
+.venv/
+.vscode/
+.web
+__pycache__/
+assets/external/
+venv/
