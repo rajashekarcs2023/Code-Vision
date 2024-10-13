@@ -1,5 +1,4 @@
 import reflex as rx
-import asyncio
 
 class State(rx.State):
     """The app state."""
@@ -45,29 +44,10 @@ class State(rx.State):
         """Set the selected analysis type."""
         self.analysis_type = analysis_type
 
-    async def start_analysis(self):
-        """Trigger the analysis based on the selected type."""
+    def start_analysis(self):
+        """Trigger the analysis."""
         if self.analysis_type:
             self.result = f"Starting {self.analysis_type}..."
-            
-            # API URL based on the analysis type
-            api_url = {
-                "Code Quality Analysis": "/analyze/quality/",
-                "Bug Detection": "/analyze/bugs/",
-                "Performance Optimization": "/analyze/performance/",
-                "Security Audit": "/analyze/security/",
-                "Code Refactoring": "/analyze/refactor/"
-            }.get(self.analysis_type, "")
-
-            if api_url:
-                # Send HTTP request to the FastAPI backend
-                response = await rx.http.get(api_url)
-                
-                # Handle response
-                if response.status_code == 200:
-                    self.result = f"Analysis completed: {response.json()}"
-                else:
-                    self.result = f"Error during {self.analysis_type}: {response.text}"
         else:
             self.result = "Please select an analysis type first."
 
